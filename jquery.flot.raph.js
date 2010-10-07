@@ -559,6 +559,8 @@
 
                 s.datapoints.pointsize = format.length;
                 
+                s.datapoints.pointsize = format.length;
+                
                 ps = s.datapoints.pointsize;
                 points = s.datapoints.points;
 
@@ -1583,6 +1585,10 @@
                         else {
                             pos.left = box.left + box.padding;
                             align = "left";
+                            paper.text((box.left + box.padding), Math.round(plotOffset.top + axis.p2c(tick.v)), tick.label).attr({
+                                "text-anchor":"start",
+                                "font-family":"Helvetica, Arial"
+                            });
                         }
                     }
 
