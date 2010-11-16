@@ -2374,7 +2374,22 @@
             if (typeof spec == "string")
                 return spec;
             else {
-                return null;
+                // assume this is a gradient spec
+                // Raphael gradient notation:
+                // <angle>-<color>-<color>[-<color>...]
+                var gradient = (spec.angle == undefined) ? '270' : spec.angle;
+                
+                for (var i = 0; i < spec.colors.length; ++i) {
+                    var c = spec.colors[i];
+                    if (typeof c != "string") {
+                        c = $.color.parse(defaultColor).scale('rgb', c.brightness);
+                        c.a *= c.opacity;
+                        c = c.toString();
+                    }
+                    gradient += "-" + c;
+                }
+                
+                return gradient;
             }
         }
     }
