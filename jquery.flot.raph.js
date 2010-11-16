@@ -159,7 +159,7 @@
         plot.width = function () { return plotWidth; };
         plot.height = function () { return plotHeight; };
         plot.offset = function () {
-            var o = eventHolder.offset();
+            var o = $(plotArea.node).offset();
             o.left += plotOffset.left;
             o.top += plotOffset.top;
             return o;
@@ -711,7 +711,7 @@
 
         function bindEvents() {
 
-            eventHolder = $(plotArea.node).css("pointer-events","fill");
+            eventHolder = $(placeholder[0]).css("pointer-events","fill");
 
             // bind events
             if (options.grid.hoverable)
