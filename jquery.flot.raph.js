@@ -1397,7 +1397,9 @@
             }
 
             // draw markings
-            var markings = options.grid.markings;
+            var markings = options.grid.markings,
+                markings_set = paper.set();
+
             if (markings) {
                 if ($.isFunction(markings)) {
                     var axes = plot.getAxes();
@@ -1414,7 +1416,8 @@
                 for (i = 0; i < markings.length; ++i) {
                     var m = markings[i],
                         xrange = extractRange(m, "x"),
-                        yrange = extractRange(m, "y");
+                        yrange = extractRange(m, "y"),
+                        path = "";
 
                     // fill in missing
                     if (xrange.from == null)
@@ -1445,7 +1448,26 @@
                     yrange.from = yrange.axis.p2c(yrange.from);
                     yrange.to = yrange.axis.p2c(yrange.to);
                     
-
+                    if (xrange.from == xrange.to || yrange.from == yrange.to) {
+                        // draw line
+                        path += "M"+xrange.from+" "+yrange.from;
+                        path += "L"+xrange.to+" "+yrange.to;
+                        markings_set.push(paper.path(path));
+                    }
+                    else {
+                        // fill area
+                        paper.rect(xrange.from, yrange.to, xrange.to - xrange.from, yrange.from - yrange.to).attr({
+                          fill: m.color || options.grid.markingsColor,
+                          stroke: null
+                        }).translate(plotOffset.left, plotOffset.top);
+                    }
+                }
+                
+                if (markings_set.length) {
+                    markings_set.attr({
+                        stroke: m.color || options.grid.markingsColor,
+                        "stroke-width": m.lineWidth || options.grid.markingsLineWidth
+                    }).translate(plotOffset.left, plotOffset.top);
                 }
             }
             
