@@ -1863,16 +1863,19 @@
             var lw = series.lines.lineWidth,
                 sw = series.shadowSize;
             // FIXME: consider another form of shadow when filling is turned on
-            // if (lw > 0 && sw > 0) {
-            //     // draw shadow as a thick and thin line with transparency
-            //     ctx.lineWidth = sw;
-            //     ctx.strokeStyle = "rgba(0,0,0,0.1)";
-            //     // position shadow at angle from the mid of line
-            //     var angle = Math.PI/18;
-            //     plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/2), Math.cos(angle) * (lw/2 + sw/2), series.xaxis, series.yaxis);
-            //     ctx.lineWidth = sw/2;
-            //     plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/4), Math.cos(angle) * (lw/2 + sw/4), series.xaxis, series.yaxis);
-            // }
+            if (lw > 0 && sw > 0) {
+                // draw shadow as a thick and thin line with transparency
+                // position shadow at angle from the mid of line
+                var angle = Math.PI/18;
+                
+                currentSet = paper.set();
+                plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/2), Math.cos(angle) * (lw/2 + sw/2), series.xaxis, series.yaxis);
+                currentSet.attr({stroke: "rgba(0,0,0,0.1)", "stroke-width":sw }).translate(plotOffset.left, plotOffset.top);
+                
+                currentSet = paper.set()
+                plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/4), Math.cos(angle) * (lw/2 + sw/4), series.xaxis, series.yaxis);
+                currentSet.attr({stroke: "rgba(0,0,0,0.1)", "stroke-width": sw/2 }).translate(plotOffset.left, plotOffset.top);
+            }
 
             currentSet = paper.set();
             var fillStyle = getFillStyle(series.lines, series.color, 0, plotHeight);
@@ -1912,18 +1915,32 @@
             var lw = series.points.lineWidth,
                 sw = series.shadowSize,
                 radius = series.points.radius;
-            // if (lw > 0 && sw > 0) {
-            //     // draw shadow in two steps
-            //     var w = sw / 2;
-            //     ctx.lineWidth = w;
-            //     ctx.strokeStyle = "rgba(0,0,0,0.1)";
-            //     plotPoints(series.datapoints, radius, null, w + w/2, Math.PI,
-            //                series.xaxis, series.yaxis);
-            // 
-            //     ctx.strokeStyle = "rgba(0,0,0,0.2)";
-            //     plotPoints(series.datapoints, radius, null, w/2, Math.PI,
-            //                series.xaxis, series.yaxis);
-            // }
+            if (lw > 0 && sw > 0) {
+                // draw shadow in two steps
+                var w = sw / 2,
+                    shadow_color = "rgba(0,0,0,0.1)";
+
+                currentSet = paper.set();
+                
+                plotPoints(series.datapoints, radius, null, w + w/2, Math.PI,
+                           series.xaxis, series.yaxis);
+                
+                currentSet.attr( {
+                    stroke: shadow_color,
+                    "stroke-width": w
+                }).translate(plotOffset.left, plotOffset.top);
+
+                shadow_color = "rgba(0,0,0,0.2)";
+                currentSet = paper.set();
+                
+                plotPoints(series.datapoints, radius, null, w/2, Math.PI,
+                           series.xaxis, series.yaxis);
+                
+                currentSet.attr( {
+                    stroke: shadow_color,
+                    "stroke-width": w
+                }).translate(plotOffset.left, plotOffset.top);
+            }
 
             currentSet = paper.set();
             
