@@ -2264,7 +2264,7 @@
         // trigger click or hover event (they send the same parameters
         // so we share their code)
         function triggerClickHoverEvent(eventname, event, seriesFilter) {
-            var offset = $(paper.canvas).offset(),
+            var offset = eventHolder.offset(),
                 canvasX = event.pageX - offset.left - plotOffset.left,
                 canvasY = event.pageY - offset.top - plotOffset.top,
             pos = canvasToAxisCoords({ left: canvasX, top: canvasY });
