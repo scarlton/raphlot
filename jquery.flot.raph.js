@@ -969,11 +969,7 @@
             if (options.grid.show) {
                 for (k = 0; k < axes.length; ++k)
                     fixupAxisBox(axes[k]);
-                
-                insertAxisLabels();
             }
-            
-            insertLegend();
         }
         
         function setRange(axis) {
@@ -1332,11 +1328,16 @@
         }
       
         function draw() {
+            paper.clear();
 
             var grid = options.grid;
             
-            if (grid.show && !grid.aboveData)
-                drawGrid();
+            if (grid.show) {
+				insertAxisLabels();
+				insertLegend();
+				if (!grid.aboveData)
+                	drawGrid();
+            }
 
             for (var i = 0; i < series.length; ++i) {
                 executeHooks(hooks.drawSeries, [null, series[i]]);
